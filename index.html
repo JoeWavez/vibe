@@ -148,7 +148,7 @@
       <!-- WebAuthn Passkey Direct Button -->
       <button onclick="triggerWebAuthnNative()" class="w-full glass-card hover:bg-white/10 text-white font-medium py-3 px-6 rounded-2xl flex items-center justify-center space-x-2 text-xs border border-white/10 transition-all duration-200">
         <i class="fas fa-fingerprint text-blue-400"></i>
-        <span>Test Browser Native Passkey API</span>
+        <span>Test Hardware Face ID (WebAuthn API)</span>
       </button>
 
       <div class="mt-8 pt-6 border-t border-white/10 flex justify-between text-xs text-gray-500">
@@ -157,7 +157,7 @@
       </div>
     </div>
 
-    <!-- STEP 2: FACE ID BIOMETRIC SCANNER (Simulated overlay) -->
+    <!-- STEP 2: FACE ID BIOMETRIC SCANNER -->
     <div id="step-faceid" class="hidden glass-card rounded-3xl p-8 text-center shadow-2xl transition-all duration-500">
       <h2 class="text-xs uppercase tracking-widest text-blue-400 font-semibold mb-6">Face ID Verification</h2>
 
@@ -183,9 +183,8 @@
       </button>
     </div>
 
-    <!-- STEP 3: OAUTH CONSENT MODAL (APPLE SHEET LOOK) -->
+    <!-- STEP 3: OAUTH CONSENT MODAL -->
     <div id="step-consent" class="hidden glass-card-light rounded-3xl p-6 shadow-2xl transition-all duration-500 text-left">
-      <!-- Apple Auth Sheet Header -->
       <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
         <div class="flex items-center space-x-2">
           <i class="fab fa-apple text-2xl text-black"></i>
@@ -199,16 +198,15 @@
           <i class="fas fa-shield-alt text-white text-xl"></i>
         </div>
         <h3 class="text-lg font-bold text-gray-900">Do you want to sign in to "Demo App" with your Apple ID?</h3>
-        <p class="text-xs text-gray-500 mt-1">joelarps@icloud.com</p>
+        <p id="consent-email-sub" class="text-xs text-gray-500 mt-1">joelarps@icloud.com</p>
       </div>
 
-      <!-- Information Sharing Disclosure Box -->
       <div class="bg-gray-100/80 rounded-2xl p-4 mb-6 text-xs text-gray-700 space-y-3 border border-gray-200">
         <div class="flex items-start space-x-3">
           <i class="fas fa-user-circle text-blue-600 text-base mt-0.5"></i>
-          <div>
+          <div class="w-full">
             <span class="font-semibold block text-gray-900">Name</span>
-            <span id="consent-name" class="text-gray-600">Joel Arps</span>
+            <input type="text" id="consent-name-input" value="Joel Arps" class="w-full mt-1 bg-white border border-gray-300 rounded-lg px-2.5 py-1 text-xs text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium">
           </div>
         </div>
         <div class="flex items-start space-x-3 pt-2 border-t border-gray-200">
@@ -218,7 +216,7 @@
             <div class="mt-1.5 space-y-2">
               <label class="flex items-center space-x-2 cursor-pointer">
                 <input type="radio" name="email-option" value="real" checked class="text-blue-600 focus:ring-blue-500">
-                <span class="text-xs text-gray-800">Share My Email (j***@icloud.com)</span>
+                <span id="real-email-label" class="text-xs text-gray-800">Share My Email (joelarps@icloud.com)</span>
               </label>
               <label class="flex items-center space-x-2 cursor-pointer">
                 <input type="radio" name="email-option" value="hide" class="text-blue-600 focus:ring-blue-500">
@@ -229,13 +227,11 @@
         </div>
       </div>
 
-      <!-- Notice explaining privacy/prank conversation -->
       <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 mb-6 flex items-start space-x-2 text-amber-900 text-xs">
         <i class="fas fa-info-circle text-amber-600 mt-0.5"></i>
         <span><strong>Notice:</strong> Apple ID authentication always requests explicit consent before sharing personal details.</span>
       </div>
 
-      <!-- Action Buttons -->
       <div class="space-y-2">
         <button onclick="approveConsent()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl text-sm transition-colors shadow-md">
           Continue with Face ID
@@ -248,8 +244,6 @@
 
     <!-- STEP 4: AUTHENTICATED DASHBOARD RESULT -->
     <div id="step-dashboard" class="hidden glass-card rounded-3xl p-6 shadow-2xl transition-all duration-500">
-      
-      <!-- Top user bar -->
       <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
         <div class="flex items-center space-x-3">
           <div id="user-avatar" class="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center font-bold text-lg text-white shadow-md">
@@ -263,11 +257,10 @@
         <span class="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-medium border border-emerald-500/30">Verified</span>
       </div>
 
-      <!-- Authenticated Details Grid -->
       <div class="space-y-3 mb-6 text-xs">
         <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex justify-between items-center">
           <span class="text-gray-400">Authentication Method</span>
-          <span class="text-white font-medium flex items-center gap-1.5"><i class="fas fa-face-smile text-blue-400"></i> Apple Face ID (Passkey)</span>
+          <span id="dash-method" class="text-white font-medium flex items-center gap-1.5"><i class="fas fa-face-smile text-blue-400"></i> Apple Face ID (Passkey)</span>
         </div>
 
         <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex justify-between items-center">
@@ -281,7 +274,6 @@
         </div>
       </div>
 
-      <!-- Test Account Selector -->
       <div class="mb-6 p-3 bg-white/5 rounded-xl border border-white/10">
         <label class="block text-xs font-medium text-gray-300 mb-2">Simulate Other User Account:</label>
         <select id="user-select" onchange="switchUser(this.value)" class="w-full bg-black/50 border border-gray-700 text-white text-xs rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500">
@@ -291,7 +283,6 @@
         </select>
       </div>
 
-      <!-- Prank & Security Educational Breakdown Toggle -->
       <div class="mb-6">
         <button onclick="toggleExplainer()" class="w-full text-left p-3.5 bg-blue-500/10 hover:bg-blue-500/20 rounded-xl border border-blue-500/30 transition-all flex justify-between items-center text-xs text-blue-300">
           <span class="font-medium flex items-center gap-2"><i class="fas fa-lightbulb text-yellow-400"></i> Why can't a website silently scan an Apple ID?</span>
@@ -308,11 +299,9 @@
         </div>
       </div>
 
-      <!-- Action Footer -->
       <button onclick="resetFlow()" class="w-full bg-white/10 hover:bg-white/20 text-white font-medium py-2.5 px-4 rounded-xl text-xs transition-colors border border-white/10">
         Sign Out / Reset Demo
       </button>
-
     </div>
 
   </main>
@@ -322,7 +311,6 @@
   </footer>
 
   <script>
-    // User profile state mock data
     const profiles = {
       joel: {
         name: "Joel Arps",
@@ -346,8 +334,8 @@
 
     let activeProfile = profiles.joel;
     let scanTimer = null;
+    let usedHardwareFaceID = false;
 
-    // View switcher helper
     function showStep(stepId) {
       const steps = ['step-landing', 'step-faceid', 'step-consent', 'step-dashboard'];
       steps.forEach(id => {
@@ -362,27 +350,24 @@
       });
     }
 
-    // Step 1 -> Step 2: Trigger Face ID Scanner
     function triggerAuthFlow() {
+      usedHardwareFaceID = false;
       showStep('step-faceid');
       startFaceIDScan();
     }
 
-    // Step 2: Simulate Face ID Scanner timing
     function startFaceIDScan() {
       const faceIcon = document.getElementById('faceid-icon');
       const successIcon = document.getElementById('success-icon');
       const scanStatus = document.getElementById('scan-status');
       const box = document.getElementById('faceid-box');
 
-      // Reset state
       box.classList.add('scanning');
       faceIcon.classList.remove('hidden');
       successIcon.classList.add('hidden');
       scanStatus.innerText = "Scanning Face ID...";
       scanStatus.className = "text-sm font-medium text-gray-300 mb-2";
 
-      // Trigger success after 2 seconds
       scanTimer = setTimeout(() => {
         box.classList.remove('scanning');
         faceIcon.classList.add('hidden');
@@ -390,7 +375,6 @@
         scanStatus.innerText = "Biometric Authenticated";
         scanStatus.className = "text-sm font-semibold text-emerald-400 mb-2";
 
-        // Move to consent screen after successful scan
         setTimeout(() => {
           showStep('step-consent');
         }, 1000);
@@ -403,36 +387,65 @@
       showStep('step-landing');
     }
 
-    // Native WebAuthn API Call simulation / fallback
+    // Call Real WebAuthn Hardware Passkey API
     async function triggerWebAuthnNative() {
-      if (window.PublicKeyCredential) {
-        try {
-          // Trigger browser credential request prompt if supported
-          const challenge = new Uint8Array(32);
-          window.crypto.getRandomValues(challenge);
-          
-          showStep('step-faceid');
-          startFaceIDScan();
-        } catch (e) {
-          triggerAuthFlow();
-        }
-      } else {
+      if (!window.PublicKeyCredential) {
+        alert("WebAuthn / Passkeys are not supported on this browser.");
+        triggerAuthFlow();
+        return;
+      }
+
+      try {
+        const challenge = new Uint8Array(32);
+        window.crypto.getRandomValues(challenge);
+
+        // Triggers the iOS system sheet and Face ID prompt if hosted on HTTPS
+        const credential = await navigator.credentials.create({
+          publicKey: {
+            rp: { name: "Apple Auth Lab" },
+            user: {
+              id: new Uint8Array([1, 2, 3, 4]),
+              name: activeProfile.email,
+              displayName: activeProfile.name
+            },
+            challenge: challenge,
+            pubKeyCredParams: [{ type: "public-key", alg: -7 }],
+            authenticatorSelection: {
+              authenticatorAttachment: "platform",
+              userVerification: "required"
+            },
+            timeout: 60000
+          }
+        });
+
+        usedHardwareFaceID = true;
+        showStep('step-consent');
+
+      } catch (err) {
+        console.warn("Hardware WebAuthn prompt canceled or unavailable in HTTP preview mode:", err);
+        // Fall back to simulator if hardware biometrics are blocked by origin restrictions
         triggerAuthFlow();
       }
     }
 
-    // Step 3 -> Step 4: Consent Approval
     function approveConsent() {
       const emailOption = document.querySelector('input[name="email-option"]:checked').value;
+      const customName = document.getElementById('consent-name-input').value || activeProfile.name;
       
-      // Update UI with consented details
-      document.getElementById('dash-name').innerText = activeProfile.name;
+      const parts = customName.split(' ');
+      const initials = parts.map(p => p[0]).join('').toUpperCase().slice(0, 2) || "AU";
+
+      document.getElementById('dash-name').innerText = customName;
       document.getElementById('dash-email').innerText = (emailOption === 'hide') 
         ? 'dp83kx921m@privaterelay.appleid.com' 
         : activeProfile.email;
-      document.getElementById('user-avatar').innerText = activeProfile.initials;
+      document.getElementById('user-avatar').innerText = initials;
       document.getElementById('dash-time').innerText = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       document.getElementById('dash-device').innerText = activeProfile.device;
+      
+      document.getElementById('dash-method').innerHTML = usedHardwareFaceID
+        ? '<i class="fas fa-fingerprint text-emerald-400"></i> Hardware Passkey (iOS Secure Enclave)'
+        : '<i class="fas fa-face-smile text-blue-400"></i> Apple Face ID (Passkey)';
 
       showStep('step-dashboard');
     }
@@ -441,11 +454,12 @@
       showStep('step-landing');
     }
 
-    // Switch profiles in dashboard
     function switchUser(key) {
       if (profiles[key]) {
         activeProfile = profiles[key];
-        document.getElementById('consent-name').innerText = activeProfile.name;
+        document.getElementById('consent-name-input').value = activeProfile.name;
+        document.getElementById('consent-email-sub').innerText = activeProfile.email;
+        document.getElementById('real-email-label').innerText = `Share My Email (${activeProfile.email})`;
         document.getElementById('dash-name').innerText = activeProfile.name;
         document.getElementById('dash-email').innerText = activeProfile.email;
         document.getElementById('user-avatar').innerText = activeProfile.initials;
@@ -453,7 +467,6 @@
       }
     }
 
-    // Toggle Educational Accordion
     function toggleExplainer() {
       const content = document.getElementById('explainer-content');
       const chevron = document.getElementById('explainer-chevron');
@@ -466,14 +479,12 @@
       }
     }
 
-    // Toggle Dark / Light aesthetic preview mode
     let isDark = true;
     function toggleTheme() {
       isDark = !isDark;
       document.body.style.background = isDark ? '#000000' : '#f2f2f7';
     }
 
-    // Reset flow
     function resetFlow() {
       showStep('step-landing');
     }
